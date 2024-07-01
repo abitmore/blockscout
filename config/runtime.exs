@@ -367,6 +367,13 @@ config :explorer, Explorer.ExchangeRates.Source.CoinGecko,
   coin_id: System.get_env("EXCHANGE_RATES_COINGECKO_COIN_ID"),
   secondary_coin_id: cg_secondary_coin_id
 
+config :explorer, Explorer.ExchangeRates.Source.Mobula,
+  platform: System.get_env("EXCHANGE_RATES_MOBULA_CHAIN_ID"),
+  base_url: System.get_env("EXCHANGE_RATES_MOBULA_BASE_URL", "https://api.mobula.io/api/1"),
+  api_key: System.get_env("EXCHANGE_RATES_MOBULA_API_KEY"),
+  coin_id: System.get_env("EXCHANGE_RATES_MOBULA_COIN_ID"),
+  secondary_coin_id: System.get_env("EXCHANGE_RATES_MOBULA_SECONDARY_COIN_ID")
+
 config :explorer, Explorer.ExchangeRates.Source.DefiLlama, coin_id: System.get_env("EXCHANGE_RATES_DEFILLAMA_COIN_ID")
 
 cc_secondary_coin_symbol = System.get_env("EXCHANGE_RATES_CRYPTOCOMPARE_SECONDARY_COIN_SYMBOL")
@@ -584,7 +591,10 @@ config :explorer, Explorer.Utility.MissingBalanceOfToken,
   window_size: ConfigHelper.parse_integer_env_var("MISSING_BALANCE_OF_TOKENS_WINDOW_SIZE", 100)
 
 config :explorer, Explorer.Chain.TokenTransfer,
-  whitelisted_weth_contracts: ConfigHelper.parse_list_env_var("WHITELISTED_WETH_CONTRACTS", "")
+  whitelisted_weth_contracts: ConfigHelper.parse_list_env_var("WHITELISTED_WETH_CONTRACTS", ""),
+  weth_token_transfers_filtering_enabled: ConfigHelper.parse_bool_env_var("WETH_TOKEN_TRANSFERS_FILTERING_ENABLED")
+
+config :explorer, Explorer.Chain.Metrics, disabled?: ConfigHelper.parse_bool_env_var("METRICS_DISABLE_PUBLIC", "false")
 
 ###############
 ### Indexer ###
@@ -667,6 +677,9 @@ config :indexer, Indexer.Fetcher.OnDemand.CoinBalance,
 
 config :indexer, Indexer.Fetcher.OnDemand.ContractCode,
   threshold: ConfigHelper.parse_time_env_var("CONTRACT_CODE_ON_DEMAND_FETCHER_THRESHOLD", "5s")
+
+config :indexer, Indexer.Fetcher.OnDemand.TokenInstanceMetadataRefetch,
+  threshold: ConfigHelper.parse_time_env_var("TOKEN_INSTANCE_METADATA_REFETCH_ON_DEMAND_FETCHER_THRESHOLD", "5s")
 
 config :indexer, Indexer.Fetcher.BlockReward.Supervisor,
   disabled?: ConfigHelper.parse_bool_env_var("INDEXER_DISABLE_BLOCK_REWARD_FETCHER")
